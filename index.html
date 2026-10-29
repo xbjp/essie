@@ -1,0 +1,548 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#090909">
+<title>essie.exe</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+:root{
+  color-scheme:dark;
+  --bg:#090909;--panel:#101010;--panel2:#151515;
+  --text:#f3f3f3;--muted:#858585;--line:#292929;
+  --accent:#d7ff64;--invert:#090909;--shadow:0 16px 50px #0005;
+}
+[data-theme="light"]{
+  color-scheme:light;
+  --bg:#f4f4f0;--panel:#fff;--panel2:#ebebe6;
+  --text:#151515;--muted:#72726b;--line:#dcdcd5;
+  --accent:#526b00;--invert:#fff;--shadow:0 16px 50px #0000000b;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:90px}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:"Space Grotesk",sans-serif;
+  transition:background .25s,color .25s;
+}
+body:before{
+  content:"";position:fixed;inset:0;pointer-events:none;z-index:-1;
+  background-image:radial-gradient(var(--line) .7px,transparent .7px);
+  background-size:19px 19px;opacity:.45;
+}
+a{color:inherit;text-decoration:none}
+button,input,textarea{font:inherit}
+button{color:inherit}
+::selection{background:var(--accent);color:var(--invert)}
+::focus-visible{outline:2px solid var(--accent);outline-offset:4px}
+.wrap{width:min(1080px,calc(100% - 36px));margin:auto}
+
+/* top bar */
+.topbar{
+  position:sticky;top:0;z-index:20;background:color-mix(in srgb,var(--bg) 86%,transparent);
+  backdrop-filter:blur(16px);border-bottom:1px solid var(--line);
+}
+.nav{height:68px;display:flex;align-items:center;justify-content:space-between;gap:20px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:-.7px}
+.brand-icon{
+  width:32px;height:32px;display:grid;place-items:center;
+  background:var(--accent);color:var(--invert);border-radius:9px;
+  font-family:"DM Mono",monospace;font-size:14px;transform:rotate(-5deg);
+}
+.navlinks{display:flex;align-items:center;gap:22px;font:11px "DM Mono",monospace;color:var(--muted)}
+.navlinks a:hover{color:var(--text)}
+.nav-right{display:flex;gap:8px}
+.icon-btn,.pill-btn{
+  border:1px solid var(--line);background:var(--panel);border-radius:10px;
+  min-height:36px;padding:0 12px;cursor:pointer;transition:.2s;
+}
+.icon-btn:hover,.pill-btn:hover{border-color:var(--accent);transform:translateY(-2px)}
+.icon-btn{width:38px;padding:0}
+
+/* hero */
+main{padding:38px 0 70px}
+.eyebrow{font:11px "DM Mono",monospace;color:var(--muted);letter-spacing:1.2px;text-transform:uppercase}
+.hero{
+  position:relative;display:grid;grid-template-columns:1fr 245px;gap:30px;
+  padding:42px;border:1px solid var(--line);border-radius:20px;
+  background:var(--panel);overflow:hidden;box-shadow:var(--shadow);
+}
+.hero:after{
+  content:"";position:absolute;width:250px;height:250px;border:1px solid var(--line);
+  border-radius:50%;right:120px;top:-160px;pointer-events:none;
+  box-shadow:0 0 0 35px color-mix(in srgb,var(--line) 30%,transparent),
+  0 0 0 70px color-mix(in srgb,var(--line) 15%,transparent);
+}
+.hero-copy,.profile-card{position:relative;z-index:1}
+.hero h1{
+  font-size:clamp(54px,9vw,100px);line-height:.88;letter-spacing:-7px;
+  margin:28px 0 22px;font-weight:700;
+}
+.hero h1 .dot{color:var(--accent)}
+.bio{max-width:460px;color:var(--muted);font-size:15px;line-height:1.8}
+.tag-row{display:flex;flex-wrap:wrap;gap:8px;margin-top:24px}
+.tag{font:10px "DM Mono",monospace;border:1px solid var(--line);padding:8px 10px;border-radius:7px;color:var(--muted)}
+.tag:first-child{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 45%,var(--line))}
+.hero-actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
+.primary{
+  display:inline-flex;align-items:center;justify-content:center;gap:9px;
+  background:var(--accent);color:var(--invert);border:1px solid var(--accent);
+  border-radius:9px;padding:12px 16px;font-size:12px;font-weight:700;
+  transition:transform .2s,filter .2s;
+}
+.primary:hover{transform:translateY(-3px);filter:brightness(1.08)}
+.secondary{display:inline-flex;align-items:center;gap:8px;border:1px solid var(--line);border-radius:9px;padding:12px 16px;font-size:12px}
+.secondary:hover{border-color:var(--text)}
+.profile-card{
+  align-self:center;background:var(--panel2);border:1px solid var(--line);
+  padding:18px;border-radius:15px;transform:rotate(2deg);transition:transform .3s;
+}
+.profile-card:hover{transform:rotate(0) translateY(-4px)}
+.avatar{
+  aspect-ratio:1;width:100%;border-radius:10px;display:grid;place-items:center;
+  background:var(--bg);border:1px solid var(--line);font-size:68px;overflow:hidden;
+}
+.avatar img{width:100%;height:100%;object-fit:cover}
+.profile-top{display:flex;align-items:center;justify-content:space-between;margin:16px 0 7px}
+.handle{font:12px "DM Mono",monospace}
+.online{display:flex;align-items:center;gap:6px;font:10px "DM Mono",monospace;color:var(--muted)}
+.online i{width:7px;height:7px;background:var(--accent);border-radius:50%;box-shadow:0 0 10px var(--accent)}
+.profile-caption{font-size:12px;color:var(--muted);line-height:1.6}
+.profile-meta{display:flex;justify-content:space-between;border-top:1px solid var(--line);margin-top:15px;padding-top:12px;font:10px "DM Mono",monospace;color:var(--muted)}
+
+/* ticker */
+.ticker{overflow:hidden;border-block:1px solid var(--line);margin:24px 0 46px;padding:12px 0}
+.ticker-track{display:flex;width:max-content;animation:scroll 28s linear infinite}
+.ticker span{font:10px "DM Mono",monospace;color:var(--muted);padding:0 22px;white-space:nowrap}
+.ticker b{color:var(--accent);font-weight:400}
+@keyframes scroll{to{transform:translateX(-50%)}}
+
+/* sections */
+.section{margin-top:46px}
+.section-head{display:flex;align-items:end;justify-content:space-between;gap:16px;margin-bottom:18px}
+.section-title{margin:8px 0 0;font-size:25px;letter-spacing:-1px}
+.section-number{font:11px "DM Mono",monospace;color:var(--muted)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+.card{
+  border:1px solid var(--line);background:var(--panel);border-radius:14px;
+  padding:22px;min-width:0;transition:border-color .2s,transform .2s,background .2s;
+}
+.card:hover{border-color:color-mix(in srgb,var(--accent) 55%,var(--line));transform:translateY(-3px)}
+.card-top{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-bottom:20px}
+.card-icon{font:18px "DM Mono",monospace;color:var(--accent)}
+.card-label{font:10px "DM Mono",monospace;color:var(--muted)}
+.card h3{font-size:17px;margin:0 0 8px;letter-spacing:-.4px}
+.card p{font-size:12px;color:var(--muted);line-height:1.7;margin:0}
+.music-list{display:grid;gap:0}
+.track{display:flex;align-items:center;gap:12px;padding:13px 0;border-top:1px solid var(--line)}
+.track:first-child{border-top:0}
+.track-no{font:10px "DM Mono",monospace;color:var(--muted);width:18px}
+.track-art{width:39px;height:39px;border-radius:8px;background:var(--panel2);border:1px solid var(--line);display:grid;place-items:center;font-size:16px}
+.track-info{flex:1;min-width:0}
+.track-info strong{display:block;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.track-info small{display:block;color:var(--muted);font-size:10px;margin-top:4px}
+.track-link{font:10px "DM Mono",monospace;color:var(--accent)}
+.social-list{display:grid;gap:9px}
+.social-link{display:flex;align-items:center;justify-content:space-between;gap:12px;border:1px solid var(--line);border-radius:9px;padding:13px;transition:.2s}
+.social-link:hover{background:var(--panel2);padding-left:17px}
+.social-left{display:flex;align-items:center;gap:10px;font-size:12px}
+.social-symbol{width:29px;height:29px;border-radius:8px;background:var(--panel2);display:grid;place-items:center;font:12px "DM Mono",monospace}
+.arrow{color:var(--muted)}
+.diary-entry{padding:15px 0;border-top:1px solid var(--line)}
+.diary-entry:first-child{border-top:0}
+.diary-date{font:10px "DM Mono",monospace;color:var(--accent)}
+.diary-entry h3{font-size:14px;margin:8px 0}
+.diary-entry p{font-size:12px;color:var(--muted);line-height:1.7}
+.guest-form{display:grid;gap:10px;margin-top:18px}
+.field{width:100%;border:1px solid var(--line);background:var(--bg);color:var(--text);border-radius:9px;padding:12px;font-size:12px;outline:none}
+.field:focus{border-color:var(--accent)}
+textarea.field{resize:vertical;min-height:90px}
+.guest-list{display:grid;gap:10px;margin-top:18px}
+.guest-message{padding:13px;border:1px solid var(--line);border-radius:9px}
+.guest-message strong{font-size:11px}
+.guest-message p{margin-top:7px;overflow-wrap:anywhere}
+.guest-note{font:10px "DM Mono",monospace;color:var(--muted);line-height:1.6;margin-top:14px}
+.secret{
+  position:relative;text-align:center;padding:34px;border:1px dashed var(--line);
+  border-radius:14px;background:var(--panel);overflow:hidden;
+}
+.secret .big{font-size:34px}
+.secret h3{font-size:16px;margin:12px 0 7px}
+.secret p{font-size:12px;color:var(--muted);line-height:1.7}
+.secret-result{display:none;color:var(--accent)!important;font:11px "DM Mono",monospace}
+.secret.unlocked .secret-result{display:block}
+.secret.unlocked .secret-hint{display:none}
+footer{border-top:1px solid var(--line);padding:22px 0;margin-top:55px}
+.footer-inner{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font:10px "DM Mono",monospace;color:var(--muted)}
+#toast{position:fixed;bottom:22px;left:50%;transform:translate(-50%,20px);opacity:0;pointer-events:none;background:var(--text);color:var(--bg);padding:12px 16px;border-radius:10px;font:11px "DM Mono",monospace;transition:.25s;z-index:50}
+#toast.show{opacity:1;transform:translate(-50%,0)}
+.reveal{animation:rise .7s both}
+@keyframes rise{from{opacity:0;transform:translateY(13px)}to{opacity:1;transform:translateY(0)}}
+@media(prefers-reduced-motion:reduce){*,*:before,*:after{scroll-behavior:auto!important;animation:none!important;transition:none!important}}
+@media(max-width:700px){
+ .wrap{width:min(100% - 24px,520px)}
+ .nav{height:59px}.navlinks{gap:12px}.navlinks a:nth-child(2){display:none}
+ main{padding-top:20px}
+ .hero{grid-template-columns:1fr;padding:25px;gap:26px}
+ .hero h1{font-size:70px;letter-spacing:-5px;margin-top:25px}
+ .profile-card{width:min(100%,260px);justify-self:start}
+ .hero:after{right:-100px;top:-100px}
+ .ticker{margin:18px 0 36px}
+ .section{margin-top:36px}.section-title{font-size:22px}
+ .grid{grid-template-columns:1fr}
+ .card{padding:19px}
+ .secret{padding:27px 18px}
+}
+@media(max-width:390px){
+ .navlinks{display:none}.hero h1{font-size:59px}
+ .hero{padding:21px}.hero-actions>*{flex:1}
+}
+</style>
+</head>
+<body>
+<div class="topbar">
+  <div class="wrap nav">
+    <a class="brand" href="#home" aria-label="essie home">
+      <span class="brand-icon">e.</span><span>essie<span style="color:var(--accent)">.exe</span></span>
+    </a>
+    <nav class="navlinks" aria-label="Main navigation">
+      <a href="#about">ABOUT</a><a href="#music">MUSIC</a>
+      <a href="#diary">DIARY</a><a href="#guestbook">GUESTBOOK</a>
+    </nav>
+    <div class="nav-right">
+      <button class="icon-btn" id="themeBtn" aria-label="Toggle theme" title="Toggle theme">☼</button>
+      <button class="icon-btn" id="copyBtn" aria-label="Copy site link" title="Copy site link">↗</button>
+    </div>
+  </div>
+</div>
+
+<main class="wrap" id="home">
+  <section class="hero reveal">
+    <div class="hero-copy">
+      <div class="eyebrow">PERSONAL WEB / EST. 20XX</div>
+      <h1 id="heroName">essie<span class="dot">.</span></h1>
+      <p class="bio" id="heroBio">just a random person on the internet. probably coding something that didn't need to be coded.</p>
+      <div class="tag-row" id="tags"></div>
+      <div class="hero-actions">
+        <a class="primary" href="#about">explore my corner <span>↘</span></a>
+        <a class="secondary" href="#socials">find me online ↗</a>
+      </div>
+    </div>
+    <aside class="profile-card">
+      <div class="avatar" id="avatar">✳</div>
+      <div class="profile-top">
+        <span class="handle" id="profileHandle">@essie</span>
+        <span class="online"><i></i><span id="statusText">chill</span></span>
+      </div>
+      <div class="profile-caption" id="profileCaption">she/her · internet person</div>
+      <div class="profile-meta">
+        <span>BASED ONLINE</span><span id="localClock">--:--:--</span>
+      </div>
+    </aside>
+  </section>
+
+  <div class="ticker" aria-hidden="true">
+    <div class="ticker-track" id="tickerTrack">
+      <span>WELCOME TO MY CORNER <b>✳</b></span><span>CODE / MUSIC / GAMES <b>✳</b></span>
+      <span>STAY A LITTLE <b>✳</b></span><span>THE INTERNET IS YOURS <b>✳</b></span>
+      <span>WELCOME TO MY CORNER <b>✳</b></span><span>CODE / MUSIC / GAMES <b>✳</b></span>
+      <span>STAY A LITTLE <b>✳</b></span><span>THE INTERNET IS YOURS <b>✳</b></span>
+    </div>
+  </div>
+
+  <section class="section" id="about">
+    <div class="section-head">
+      <div><div class="eyebrow">01 / THE HUMAN</div><h2 class="section-title">A little about me.</h2></div>
+      <span class="section-number">[ 001 — 003 ]</span>
+    </div>
+    <div class="grid" id="aboutGrid"></div>
+  </section>
+
+  <section class="section" id="music">
+    <div class="section-head">
+      <div><div class="eyebrow">02 / CURRENTLY IN MY HEAD</div><h2 class="section-title">Soundtrack.</h2></div>
+      <span class="section-number">♫ OPEN PLAYLIST</span>
+    </div>
+    <div class="card">
+      <div class="card-top"><span class="card-icon">♫</span><span class="card-label">NO GENRE LIMITS</span></div>
+      <div class="music-list" id="musicList"></div>
+      <p style="margin-top:14px">music changes. the headphones stay.</p>
+    </div>
+  </section>
+
+  <section class="section" id="socials">
+    <div class="section-head">
+      <div><div class="eyebrow">03 / OTHER CORNERS OF THE INTERNET</div><h2 class="section-title">Find me elsewhere.</h2></div>
+      <span class="section-number">[ LINKS ]</span>
+    </div>
+    <div class="grid" id="socialGrid"></div>
+  </section>
+
+  <section class="section" id="diary">
+    <div class="section-head">
+      <div><div class="eyebrow">04 / THOUGHTS & LOGS</div><h2 class="section-title">Tiny diary.</h2></div>
+      <span class="section-number">PERSONAL LOG</span>
+    </div>
+    <div class="card" id="diaryList"></div>
+  </section>
+
+  <section class="section" id="guestbook">
+    <div class="section-head">
+      <div><div class="eyebrow">05 / LEAVE A TRACE</div><h2 class="section-title">Guestbook.</h2></div>
+      <span class="section-number" id="guestCount">0 MESSAGES</span>
+    </div>
+    <div class="card">
+      <p>you found the guestbook. leave a tiny message for the next internet wanderer.</p>
+      <form class="guest-form" id="guestForm">
+        <input class="field" id="guestName" maxlength="32" placeholder="your alias" required>
+        <textarea class="field" id="guestMessage" maxlength="240" placeholder="say something nice, weird, or interesting..." required></textarea>
+        <button class="primary" type="submit">sign the guestbook ↗</button>
+      </form>
+      <div class="guest-list" id="guestList"></div>
+      <div class="guest-note">LOCAL MODE: messages are stored only in this browser. A shared guestbook requires a database or backend.</div>
+    </div>
+  </section>
+
+  <section class="section" id="eastereggs">
+    <div class="section-head">
+      <div><div class="eyebrow">06 / SOMETHING HIDING HERE</div><h2 class="section-title">Secret corner.</h2></div>
+      <span class="section-number">???</span>
+    </div>
+    <div class="secret" id="secretBox">
+      <div class="big">⌘</div>
+      <h3>you weren't supposed to find this.</h3>
+      <p class="secret-hint">click the button. it's not that deep.</p>
+      <p class="secret-result">ACCESS GRANTED // welcome, fellow internet creature.</p>
+      <button class="secondary" id="secretBtn" style="margin-top:12px">try your luck ↗</button>
+    </div>
+  </section>
+
+  <footer>
+    <div class="footer-inner">
+      <span>© <span id="year"></span> ESSIE.EXE</span>
+      <span>MADE ON THE INTERNET, FOR THE INTERNET.</span>
+      <a href="#home">BACK TO TOP ↑</a>
+    </div>
+  </footer>
+</main>
+<div id="toast" role="status" aria-live="polite"></div>
+
+<script>
+/* Edit this CONFIG object to customize the whole website. */
+const CONFIG = {
+  profile: {
+    username: "essie",
+    pronouns: "She/her",
+    bio: "just a random person on the internet. probably coding something that didn't need to be coded.",
+    about: "welcome to my website",
+    status: "chill",
+    location: "",
+    avatar: "", // Optional image URL. Leave empty to use the symbol.
+    tags: ["CODING", "DISCORD BOTS", "GAMES", "CHRONICALLY ONLINE"]
+  },
+  about: [
+    { icon: "⌘", label: "WHAT I DO", title: "Code little things.", text: "I build random projects, experiment with websites, and make bots do things." },
+    { icon: "◎", label: "WHERE I LIVE", title: "Somewhere online.", text: "Mostly hanging around Discord, exploring the web, and doing my own thing." },
+    { icon: "✳", label: "CURRENT VIBE", title: "Lowkey existing.", text: "Listening to music, opening 37 tabs, and forgetting why I opened them." }
+  ],
+  music: [
+    { title: "Anything on repeat", artist: "Current rotation", url: "https://www.youtube.com/" },
+    { title: "Late night soundtrack", artist: "Unspecified genre", url: "https://open.spotify.com/" },
+    { title: "Random discovery", artist: "Something new", url: "https://music.youtube.com/" }
+  ],
+  socials: [
+    { name: "Discord", label: "CHAT / COMMUNITY", symbol: "◈", url: "https://discord.com/404" },
+    { name: "GitHub", label: "CODE / PROJECTS", symbol: "⌘", url: "https://github.com/xbjp" }
+  ],
+  diary: [
+    { date: "LOG 001 · 10.29.26", title: "a website of my own", text: "Finally making a little corner of the internet. Still a work in progress, just like everything else." },
+    { date: "LOG 002 · SOMEDAY", title: "something will go here", text: "Replace this entry with a thought, a project update, or a tiny memory." }
+  ],
+  theme: "dark"
+};
+
+const $ = (selector) => document.querySelector(selector);
+const make = (tag, className, text) => {
+  const el = document.createElement(tag);
+  if (className) el.className = className;
+  if (text !== undefined) el.textContent = text;
+  return el;
+};
+function safeUrl(value) {
+  try {
+    const url = new URL(value, location.href);
+    return ["https:", "http:"].includes(url.protocol) ? url.href : "#";
+  } catch { return "#"; }
+}
+function externalLink(url, label, className) {
+  const a = make("a", className, label);
+  a.href = safeUrl(url);
+  if (a.href.startsWith("http")) {
+    a.target = "_blank";
+    a.rel = "noopener noreferrer";
+  }
+  return a;
+}
+function renderProfile() {
+  const p = CONFIG.profile;
+  $("#heroName").replaceChildren(document.createTextNode(p.username));
+  $("#heroName").append(make("span", "dot", "."));
+  $("#heroBio").textContent = p.bio;
+  $("#profileHandle").textContent = "@" + p.username;
+  $("#profileCaption").textContent = [p.pronouns, p.about].filter(Boolean).join(" · ");
+  $("#statusText").textContent = p.status;
+  const avatar = $("#avatar");
+  avatar.replaceChildren();
+  if (p.avatar && safeUrl(p.avatar) !== "#") {
+    const img = document.createElement("img");
+    img.src = safeUrl(p.avatar);
+    img.alt = p.username + "'s avatar";
+    img.referrerPolicy = "no-referrer";
+    img.onerror = () => { avatar.textContent = "✳"; };
+    avatar.append(img);
+  } else avatar.textContent = "✳";
+
+  const tags = $("#tags");
+  tags.replaceChildren();
+  p.tags.forEach(t => tags.append(make("span", "tag", t)));
+}
+function renderAbout() {
+  const grid = $("#aboutGrid");
+  grid.replaceChildren();
+  CONFIG.about.forEach((item, i) => {
+    const card = make("article", "card");
+    const top = make("div", "card-top");
+    top.append(make("span", "card-icon", item.icon), make("span", "card-label", item.label));
+    card.append(top, make("h3", "", item.title), make("p", "", item.text));
+    grid.append(card);
+  });
+}
+function renderMusic() {
+  const list = $("#musicList");
+  list.replaceChildren();
+  CONFIG.music.forEach((track, i) => {
+    const row = make("div", "track");
+    row.append(make("span", "track-no", String(i + 1).padStart(2, "0")));
+    row.append(make("span", "track-art", "♫"));
+    const info = make("div", "track-info");
+    info.append(make("strong", "", track.title), make("small", "", track.artist));
+    row.append(info, externalLink(track.url, "LISTEN ↗", "track-link"));
+    list.append(row);
+  });
+}
+function renderSocials() {
+  const grid = $("#socialGrid");
+  grid.replaceChildren();
+  CONFIG.socials.forEach(social => {
+    const card = make("article", "card");
+    const top = make("div", "card-top");
+    top.append(make("span", "card-icon", social.symbol), make("span", "card-label", social.label));
+    const link = externalLink(social.url, "", "social-link");
+    const left = make("span", "social-left");
+    left.append(make("span", "social-symbol", social.symbol), make("strong", "", social.name));
+    link.append(left, make("span", "arrow", "↗"));
+    card.append(top, link);
+    grid.append(card);
+  });
+}
+function renderDiary() {
+  const list = $("#diaryList");
+  list.replaceChildren();
+  CONFIG.diary.forEach(entry => {
+    const article = make("article", "diary-entry");
+    article.append(make("div", "diary-date", entry.date), make("h3", "", entry.title), make("p", "", entry.text));
+    list.append(article);
+  });
+}
+function showToast(message) {
+  const toast = $("#toast");
+  toast.textContent = message;
+  toast.classList.add("show");
+  clearTimeout(showToast.timer);
+  showToast.timer = setTimeout(() => toast.classList.remove("show"), 2200);
+}
+function updateClock() {
+  $("#localClock").textContent = new Intl.DateTimeFormat(undefined, {
+    hour: "2-digit", minute: "2-digit", second: "2-digit", hour12: false
+  }).format(new Date());
+}
+function setTheme(theme) {
+  document.documentElement.dataset.theme = theme;
+  $("#themeBtn").textContent = theme === "dark" ? "☼" : "☾";
+  $("#themeBtn").title = "Switch to " + (theme === "dark" ? "light" : "dark") + " mode";
+  try { localStorage.setItem("essie-theme", theme); } catch {}
+}
+$("#themeBtn").addEventListener("click", () => {
+  const current = document.documentElement.dataset.theme || "dark";
+  setTheme(current === "dark" ? "light" : "dark");
+});
+$("#copyBtn").addEventListener("click", async () => {
+  try {
+    await navigator.clipboard.writeText(location.href);
+    showToast("link copied to clipboard");
+  } catch {
+    showToast("copy unavailable on this page");
+  }
+});
+
+/* Local-only guestbook. Never renders submitted content as HTML. */
+const GUEST_KEY = "essie-guestbook-v1";
+function getMessages() {
+  try {
+    const data = JSON.parse(localStorage.getItem(GUEST_KEY) || "[]");
+    return Array.isArray(data) ? data.slice(0, 30) : [];
+  } catch { return []; }
+}
+function renderMessages() {
+  const list = $("#guestList");
+  const messages = getMessages();
+  list.replaceChildren();
+  $("#guestCount").textContent = messages.length + (messages.length === 1 ? " MESSAGE" : " MESSAGES");
+  messages.forEach(message => {
+    const item = make("article", "guest-message");
+    item.append(make("strong", "", message.name));
+    item.append(make("p", "", message.text));
+    list.append(item);
+  });
+}
+$("#guestForm").addEventListener("submit", event => {
+  event.preventDefault();
+  const name = $("#guestName").value.trim();
+  const text = $("#guestMessage").value.trim();
+  if (!name || !text) return;
+  const messages = getMessages();
+  messages.unshift({ name: name.slice(0, 32), text: text.slice(0, 240) });
+  try {
+    localStorage.setItem(GUEST_KEY, JSON.stringify(messages.slice(0, 30)));
+    renderMessages();
+    $("#guestForm").reset();
+    showToast("message saved in this browser");
+  } catch {
+    showToast("couldn't save message in this browser");
+  }
+});
+$("#secretBtn").addEventListener("click", () => {
+  $("#secretBox").classList.toggle("unlocked");
+  $("#secretBtn").textContent = $("#secretBox").classList.contains("unlocked")
+    ? "you found it ✓" : "try your luck ↗";
+});
+$("#year").textContent = new Date().getFullYear();
+
+renderProfile();
+renderAbout();
+renderMusic();
+renderSocials();
+renderDiary();
+renderMessages();
+updateClock();
+setInterval(updateClock, 1000);
+
+let savedTheme = "";
+try { savedTheme = localStorage.getItem("essie-theme") || ""; } catch {}
+setTheme(savedTheme || CONFIG.theme || "dark");
+</script>
+</body>
+</html>
